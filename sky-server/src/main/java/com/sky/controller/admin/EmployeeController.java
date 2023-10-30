@@ -103,4 +103,23 @@ public class EmployeeController {
             return Result.error("操作失败");
     }
 
+    /**
+     * 根据id查询员工
+     * @param
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ApiOperation(value = "根据id查询员工")
+    public Result<Employee> getEmployeeById(@PathVariable Long id){
+        return Result.success(employeeService.getEmployeeById(id));
+    }
+
+    @PutMapping
+    @ApiOperation(value = "编辑员工信息")
+    public Result updateEmployee(@RequestBody EmployeeDTO employeeDTO){
+        employeeService.updateEmployee(employeeDTO);
+        return Result.success();
+    }
+
+
 }
