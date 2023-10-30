@@ -23,6 +23,7 @@
             <if test="updateTime!=null">updateTime =#{updateTime},</if>
             <if test="updateUser!=null">updateUser=#{updateUser},</if>
             <if test="status!=null">status=#{status},</if>
+            <if test="sex!=null">sex=#{sex},</if>
         </set>
         where id =#{id}
     </update>
