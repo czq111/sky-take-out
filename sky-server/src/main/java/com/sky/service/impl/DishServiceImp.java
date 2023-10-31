@@ -3,12 +3,17 @@ package com.sky.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.annotation.AutoFill;
+import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.entity.SetmealDish;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetMealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -24,6 +29,8 @@ public class DishServiceImp implements DishService {
     DishMapper dishMapper;
     @Autowired
     DishFlavorMapper dishFlavorMapper;
+    @Autowired
+    SetMealDishMapper setMealDishMapper;
 
     /**
      * 新增菜品
@@ -58,5 +65,28 @@ public class DishServiceImp implements DishService {
         List<DishVO> result = dishs.getResult();
         long total = dishs.getTotal();
         return new PageResult(total,result);
+    }
+
+    /**
+     * 删除菜品
+     * @param args
+     */
+    public void deleteById(Long[] args) {
+        for (int i = 0; i < args.length; i++) {
+            //查询菜品状态
+            int status=dishMapper.queryStatusById(args[i]);
+            if(status== StatusConstant.ENABLE)
+                throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+        }
+        List<SetmealDish> setmealDishes=setMealDishMapper.queryByDishId(args);
+        if(setmealDishes!=null && setmealDishes.size()>0)
+            throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
+
+        for (int i = 0; i <args.length ; i++) {
+            dishMapper.deleteById(args[i]);
+            dishFlavorMapper.deleteByDishId(args[i]);
+        }
+
+
     }
 }

@@ -18,4 +18,10 @@ public interface DishService {
      * @param dishPageQueryDTO
      */
     PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO);
+
+    /**
+     * 删除菜品
+     * @param args
+     */
+    void deleteById(Long[] args);
 }
