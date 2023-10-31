@@ -11,5 +11,11 @@
         </foreach>
     </insert>
 
-
+    <delete id="deleteBatch">
+        delete from dish_flavor
+        where
+        <foreach collection="args" item="arg" separator="or">
+            (dish_id=#{arg} )
+        </foreach>
+    </delete>
 </mapper>

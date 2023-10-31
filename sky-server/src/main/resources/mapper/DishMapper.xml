@@ -23,12 +23,12 @@
     </select>
     
     
-<!--    <delete id="deleteById">-->
-<!--        delete from dish -->
-<!--        where -->
-<!--        <foreach collection="args" item="arg" separator="or">-->
-<!--            (id=#{arg} and status=1)-->
-<!--        </foreach>-->
-<!--    </delete>-->
+    <delete id="deleteBatch">
+        delete from dish
+        where
+        <foreach collection="args" item="arg" separator="or">
+            (id=#{arg} )
+        </foreach>
+    </delete>
     
 </mapper>

@@ -2,6 +2,7 @@ package com.sky.mapper;
 
 import com.github.pagehelper.Page;
 import com.sky.annotation.AutoFill;
+import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
@@ -9,6 +10,8 @@ import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper
 public interface DishMapper {
@@ -50,4 +53,35 @@ public interface DishMapper {
      */
     @Select("select status from dish where id =#{arg}")
     int queryStatusById(Long arg);
+
+    /**
+     * 批量删除
+     * @param args
+     */
+    void deleteBatch(Long[] args);
+
+    /**
+     * 改变菜品状态
+     * @param status
+     * @param id
+     */
+    @Update("update dish set status=#{status} where id=#{id}")
+    void updateStatus(int status, Long id);
+
+    /**
+     * 根据id查菜品
+     * @param id
+     * @return
+     */
+    @Select("select * from dish where id=#{id}")
+    Dish queryById(Long id);
+
+    @AutoFill(value = OperationType.UPDATE)
+    @Update("update dish set name=#{name}," +
+            "category_id=#{categoryId}," +
+            "price=#{price}," +
+            "image=#{image}," +
+            "description=#{description},status=#{status},update_time=#{updateTime},update_user=#{updateUser}" +
+            " where id=#{id}")
+    void updateDish(Dish dish);
 }

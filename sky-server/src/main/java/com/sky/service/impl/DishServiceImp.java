@@ -20,6 +20,7 @@ import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,9 +34,10 @@ public class DishServiceImp implements DishService {
     SetMealDishMapper setMealDishMapper;
 
     /**
-     * 新增菜品
+     * 新增菜品和对应的口味
      * @param dishDTO
      */
+    @Transactional
     public void save(DishDTO dishDTO) {
         Dish dish=new Dish();
         BeanUtils.copyProperties(dishDTO,dish);
@@ -71,6 +73,7 @@ public class DishServiceImp implements DishService {
      * 删除菜品
      * @param args
      */
+    @Transactional
     public void deleteById(Long[] args) {
         for (int i = 0; i < args.length; i++) {
             //查询菜品状态
@@ -82,11 +85,60 @@ public class DishServiceImp implements DishService {
         if(setmealDishes!=null && setmealDishes.size()>0)
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
 
-        for (int i = 0; i <args.length ; i++) {
-            dishMapper.deleteById(args[i]);
-            dishFlavorMapper.deleteByDishId(args[i]);
-        }
+//        for (int i = 0; i <args.length ; i++) {
+//            dishMapper.deleteById(args[i]);
+//            dishFlavorMapper.deleteByDishId(args[i]);
+//        }
 
+        dishMapper.deleteBatch(args);
+        dishFlavorMapper.deleteBatch(args);
+
+
+    }
+
+    /**
+     * 改变菜品状态
+     * @param status
+     * @param id
+     */
+    public void updateStatus(int status, Long id) {
+        dishMapper.updateStatus(status,id);
+
+    }
+
+    /**
+     * 根据id查询菜品
+     * @param id
+     * @return
+     */
+    public DishVO queryById(Long id) {
+        Dish dish=dishMapper.queryById(id);
+        DishVO dishVO=new DishVO();
+        BeanUtils.copyProperties(dish,dishVO);
+        List<DishFlavor> dishFlavors=dishFlavorMapper.queryById(id);
+        dishVO.setFlavors(dishFlavors);
+        return dishVO;
+    }
+
+    /**
+     * 修改菜品
+     * @param dishDTO
+     */
+    @Transactional
+    public void updateDish(DishDTO dishDTO) {
+        Long id = dishDTO.getId();
+        Long[] args=new Long[]{id};
+        dishFlavorMapper.deleteBatch(args);
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        if(flavors!=null &&flavors.size()>0) {
+            flavors.forEach(flavor -> {
+                flavor.setDishId(id);
+            });
+            dishFlavorMapper.insertBatch(flavors);
+        }
+        Dish dish=new Dish();
+        BeanUtils.copyProperties(dishDTO,dish);
+        dishMapper.updateDish(dish);
 
     }
 }
