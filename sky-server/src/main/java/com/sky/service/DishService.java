@@ -2,9 +2,12 @@ package com.sky.service;
 
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.vo.DishVO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface DishService {
@@ -45,4 +48,11 @@ public interface DishService {
      * @param dishDTO
      */
     void updateDish(DishDTO dishDTO);
+
+    /**
+     * 根据菜品分类查询菜品
+     * @param categoryId
+     * @return
+     */
+    List<Dish> dishlist(Long categoryId);
 }

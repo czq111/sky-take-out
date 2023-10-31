@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
@@ -12,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -92,6 +95,13 @@ public class DishController {
     public Result updateDish(@RequestBody DishDTO dishDTO){
         dishService.updateDish(dishDTO);
         return Result.success();
+    }
+
+    @GetMapping("/list")
+    @ApiOperation(value= "根据菜品分类查询菜品")
+    public Result<List<Dish>> dishlist(Long categoryId){
+        List<Dish> res=dishService.dishlist(categoryId);
+        return Result.success(res);
     }
 
 }

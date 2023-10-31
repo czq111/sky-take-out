@@ -13,6 +13,9 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.swing.*;
+import java.util.List;
+
 @Mapper
 public interface DishMapper {
 
@@ -84,4 +87,7 @@ public interface DishMapper {
             "description=#{description},status=#{status},update_time=#{updateTime},update_user=#{updateUser}" +
             " where id=#{id}")
     void updateDish(Dish dish);
+
+    @Select("select * from dish where category_id=#{categoryId}")
+    List<Dish> dishlist(Long categoryId);
 }
