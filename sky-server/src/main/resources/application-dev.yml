@@ -11,3 +11,7 @@ sky:
     endpoint: oss-cn-shanghai.aliyuncs.com
     access-key-id: LTAI5tHZGYbJLzZSooUNh2Sv
     access-key-secret: yF2xlvj8yng7obHq1PidjE0UrX0pLD
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
