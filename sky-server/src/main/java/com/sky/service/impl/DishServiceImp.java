@@ -159,7 +159,7 @@ public class DishServiceImp implements DishService {
      * @return
      */
     public List<DishVO> listWithFlavor(Dish dish) {
-        List<Dish> dishList = dishMapper.dishlist(dish.getCategoryId());
+        List<Dish> dishList = dishMapper.dishlist2(dish.getCategoryId());
 
         List<DishVO> dishVOList = new ArrayList<>();
 
