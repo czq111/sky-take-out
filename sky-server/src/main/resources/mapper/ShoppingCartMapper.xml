@@ -27,6 +27,25 @@
 
     </update>
 
+    <delete id="deleteById">
+        delete from shopping_cart
+        <where>
+            <if test="userId !=null"> and user_id=#{userId}</if>
+            <if test="dishId !=null"> and dish_id=#{dishId}</if>
+            <if test="setmealId !=null"> and setmeal_id=#{setmealId}</if>
+            <if test="dishFlavor !=null"> and dish_flavor=#{dishFlavor}</if>
+        </where>
+    </delete>
+
+    <update id="sub">
+        update shopping_cart set number=#{number}
+        <where>
+            <if test="dishFlavor !=null"> and dish_flavor=#{dishFlavor}</if>
+            <if test="userId !=null"> and user_id=#{userId}</if>
+            <if test="dishId !=null"> and dish_id=#{dishId}</if>
+        </where>
+    </update>
+
 
 
 </mapper>

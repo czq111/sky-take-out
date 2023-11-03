@@ -89,4 +89,36 @@ public class ShoppingCartServiceImp implements ShoppingCartService {
         List<ShoppingCart> shoppingCarts=shoppingCartMapper.list(BaseContext.getCurrentId());
         return shoppingCarts;
     }
+
+    /**
+     * 清空购物车
+     */
+    public void clean() {
+        shoppingCartMapper.clean(BaseContext.getCurrentId());
+    }
+
+    /**
+     * 删除购物车一个商品v
+     * @param shoppingCartDTO
+     */
+    public void sub(ShoppingCartDTO shoppingCartDTO) {
+        if(shoppingCartDTO.getSetmealId()!=null){
+            ShoppingCart shoppingCart = shoppingCartMapper.queryByUserId(BaseContext.getCurrentId(), shoppingCartDTO.getSetmealId());
+            if(shoppingCart.getNumber()==1){
+                shoppingCartMapper.deleteById(BaseContext.getCurrentId(),shoppingCartDTO.getDishId(),shoppingCartDTO.getSetmealId(),shoppingCartDTO.getDishFlavor());
+                return;
+            }
+            shoppingCartMapper.sub(BaseContext.getCurrentId(),shoppingCartDTO.getDishId(),shoppingCartDTO.getSetmealId(),shoppingCartDTO.getDishFlavor(),shoppingCart.getNumber()-1);
+            return;
+        }
+
+        ShoppingCart shoppingCart = shoppingCartMapper.queryByUserId2(BaseContext.getCurrentId(),shoppingCartDTO.getDishId(),shoppingCartDTO.getDishFlavor());
+        if(shoppingCart.getNumber()==1){
+            shoppingCartMapper.deleteById(BaseContext.getCurrentId(),shoppingCartDTO.getDishId(),shoppingCartDTO.getSetmealId(),shoppingCartDTO.getDishFlavor());
+            return;
+        }
+        shoppingCartMapper.sub(BaseContext.getCurrentId(),shoppingCartDTO.getDishId(),shoppingCartDTO.getSetmealId(),shoppingCartDTO.getDishFlavor(),shoppingCart.getNumber()-1);
+        return;
+
+    }
 }
