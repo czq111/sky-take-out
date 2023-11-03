@@ -10,6 +10,8 @@ import com.sky.vo.SetmealVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +24,7 @@ public class SetmealController {
 
     @PostMapping
     @ApiOperation(value = "新增套餐")
+    @CacheEvict(cacheNames = "setmealCache",key = "#setmealDTO.categoryId")
     public Result save(@RequestBody SetmealDTO setmealDTO){
         setmealService.save(setmealDTO);
         return Result.success();
@@ -36,6 +39,7 @@ public class SetmealController {
 
     @DeleteMapping
     @ApiOperation(value = "删除套餐")
+    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     public Result deleteById(Long[] ids){
         setmealService.deleteBatch(ids);
         return Result.success();
@@ -43,6 +47,7 @@ public class SetmealController {
 
     @PostMapping("/status/{status}")
     @ApiOperation(value = "起售和停售")
+    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     public Result changeStatus(@PathVariable int status,Long id){
         setmealService.changeStatus(status,id);
         return Result.success();
@@ -57,6 +62,7 @@ public class SetmealController {
 
     @PutMapping
     @ApiOperation(value = "修改套餐")
+    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     public Result updateTc(@RequestBody SetmealDTO setmealDTO){
         setmealService.updateTc(setmealDTO);
         return Result.success();
